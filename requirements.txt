@@ -1,0 +1,5 @@
+freetype-py
+numpy
+matplotlib
+scikit-learn
+pytest
