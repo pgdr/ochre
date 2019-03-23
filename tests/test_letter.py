@@ -1,4 +1,8 @@
 import pytest
+import ochre
+import numpy as np
+
 
 def test_letter():
-    assert True
+    x = ochre.get_letter("x")
+    assert isinstance(x, np.ndarray)

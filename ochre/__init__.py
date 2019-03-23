@@ -1,4 +1,8 @@
 import freetype
 
-def letter(c):
-    pass
+from . import generators
+from . import training
+
+
+def get_letter(c):
+    return generators.char(c)
