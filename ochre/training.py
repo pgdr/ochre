@@ -45,3 +45,12 @@ def train(training_set: dict, width: int = 14, height: int = 14):
     print(y.shape)
     nn.fit(X, np.array(y))
     return nn
+
+
+def predict(nn, img, box=None):
+    if box is not None:
+        img = img[box[0] : box[2], box[1] : box[3]]
+    img = img.reshape(1, -1)
+    res = nn.predict(img)
+    idx = res[0].argmax()
+    return chr(idx + ord("a"))

@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-import ochre
+import ochre.training
+
 
 def main(letters):
     print(letters)
@@ -7,19 +8,23 @@ def main(letters):
     nn = ochre.training.train(ts)
 
     for letter in letters:
-        print()
-        print('=' * 10 + letter.center(5) + '='*10)
         c = ochre.get_letter(letter)
-        res = nn.predict(c.reshape(1, -1))
-        print(letter)
-        print(res)
-        print(res[0].argmax())
-        print('=' * 25)
-        print()
+        pred = ochre.training.predict(nn, c)
+        cor = "ok" if letter == pred else "fail"
+        print(f"{letter} == {pred}     {cor}")
 
-if __name__ == '__main__':
+
+def _assert_letters(args):
+    for c in args:
+        assert len(c) == 1, f'"{c}" in args not a letter'
+        assert ord("a") <= ord(c) <= ord("z"), f'"{c}" not in alphabet'
+
+
+if __name__ == "__main__":
     from sys import argv
 
     if len(argv) < 2:
-        exit('Usage: train a b c ...')
-    main(argv[1:])
+        exit("Usage: train a b c ...")
+    args = argv[1:]
+    _assert_letters(args)
+    main(args)
