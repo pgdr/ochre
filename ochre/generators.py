@@ -4,7 +4,7 @@ import numpy as np
 
 
 def _get_face(width: int = 14, height: int = 14, serif: bool = False):
-    facename = os.path.join("data", "DejaVu.ttf" if serif else "DejaVuSans.ttf")
+    facename = os.path.join("data", "DejaVuSerif.ttf" if serif else "DejaVuSans.ttf")
     face = freetype.Face(facename)
     face.set_pixel_sizes(width, height)
     return face

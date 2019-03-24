@@ -1,7 +1,7 @@
 #!/usr/bin/env python
-
-import ochre
+import os
 import matplotlib.pyplot as plt
+import ochre
 
 
 def vis_char(char):
@@ -15,7 +15,7 @@ def vis_word(word):
 
 
 def vis_sentence(sent):
-    img = ochre.get_sentence(sent)
+    img = ochre.get_sentence(sent, serif=os.getenv("SERIF"))
     return img
 
 
