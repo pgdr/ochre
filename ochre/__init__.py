@@ -3,6 +3,7 @@ import numpy as np
 
 from . import generators
 from . import training
+from . import collection
 
 
 def get_letter(c, serif=False):

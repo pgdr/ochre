@@ -39,7 +39,7 @@ def train(training_set: dict, width: int = 14, height: int = 14):
             print(len(X))
             X.append(img.reshape(1, -1))
     X = np.array(X)
-    X = X.reshape((len(training_set.items()), width * height))
+    X = X.reshape((len(X), (width * height)))
     print(X.shape)
     y = np.array([_letter_vector(x) for _ in training_set[x] for x in training_set])
     print(y.shape)
@@ -47,12 +47,17 @@ def train(training_set: dict, width: int = 14, height: int = 14):
     return nn
 
 
-def predict(nn, img, box=None):
+def predict_vector(nn, img, box=None):
     if box is not None:
         img = img[box[0] : box[2], box[1] : box[3]]
     img = img.reshape(1, -1)
-    res = nn.predict(img)
-    idx = res[0].argmax()
-    if res[0][idx] < 0.8 or len([e for e in res[0] if e > 0.5]) > 2:
+    outlayer = nn.predict(img)
+    return outlayer[0]
+
+
+def predict(nn, img, box=None):
+    vec = predict_vector(nn=nn, img=img, box=box)
+    idx = vec.argmax()
+    if vec[idx] < 0.8 or len([e for e in vec if e > 0.5]) > 2:
         return " "
     return chr(idx + ord("a"))

@@ -50,4 +50,6 @@ def shear(img, shearing=10):
         current = top - y if shearing >= 0 else y
         pad = (abs(shearing) * current) // top
         img_[y, pad : pad + left] = img[y, :]
-    return img_
+    res = img_[0:top, 0:left]
+    assert res.shape == img.shape, f"{res.shape} != {img.shape}"
+    return res
