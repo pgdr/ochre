@@ -27,3 +27,17 @@ def char(c: chr, width: int = 14, height: int = 14, serif: bool = False):
     bitmap = face.glyph.bitmap
     arr = np.array(bitmap.buffer).reshape((bitmap.rows, bitmap.width))
     return _np_pad_to(arr, height, width)
+
+
+def shift(img: np.ndarray, top: int, left: int):
+    """Shift the image `top` pixels from the top (can be negative) and
+       `left` pixels from the left.  Does not rotate.
+    """
+    abs_top = abs(top)
+    abs_left = abs(left)
+    shape = img.shape
+    img = _np_pad_to(img, width=shape[1] + 2 * abs_left, height=shape[0] + 2 * abs_top)
+    vert = (2 * abs_top, shape[0] + 2 * abs_top) if top < 0 else (0, shape[0])
+    hori = (2 * abs_left, shape[1] + 2 * abs_left) if left < 0 else (0, shape[1])
+    shape_ = img.shape
+    return img[vert[0] : vert[1], hori[0] : hori[1]]

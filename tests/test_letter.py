@@ -1,4 +1,3 @@
-import pytest
 import ochre
 import numpy as np
 
