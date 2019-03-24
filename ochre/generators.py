@@ -41,3 +41,13 @@ def shift(img: np.ndarray, top: int, left: int):
     hori = (2 * abs_left, shape[1] + 2 * abs_left) if left < 0 else (0, shape[1])
     shape_ = img.shape
     return img[vert[0] : vert[1], hori[0] : hori[1]]
+
+
+def shear(img, shearing=10):
+    top, left = img.shape
+    img_ = np.zeros((top, left + abs(shearing)), dtype=img.dtype)
+    for y in range(top):
+        current = top - y if shearing >= 0 else y
+        pad = (abs(shearing) * current) // top
+        img_[y, pad : pad + left] = img[y, :]
+    return img_
