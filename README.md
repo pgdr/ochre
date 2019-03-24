@@ -1,4 +1,5 @@
-# ochre
+# Ochre [![Build Status](https://travis-ci.org/pgdr/ochre.svg?branch=master)](https://travis-ci.org/pgdr/ochre)
+
 OCR ABC 123
 
 ## Optical Character Recognition Tutorial
