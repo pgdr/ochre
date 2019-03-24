@@ -53,4 +53,6 @@ def predict(nn, img, box=None):
     img = img.reshape(1, -1)
     res = nn.predict(img)
     idx = res[0].argmax()
+    if res[0][idx] < 0.8 or len([e for e in res[0] if e > 0.5]) > 2:
+        return " "
     return chr(idx + ord("a"))

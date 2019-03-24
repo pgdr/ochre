@@ -1,22 +1,36 @@
 #!/usr/bin/env python
+import ochre
 import ochre.training
 
 
-def main(letters):
-    print(letters)
+def main(sentence):
+    print(sentence)
+    box = lambda idx: (0, idx * 14, 14, (idx + 1) * 14)
+    sentence_img = ochre.get_sentence(sentence)
+
+    letters = sorted(set(sentence.replace(" ", "")))
     ts = {c: [ochre.get_letter(c)] for c in letters}
     nn = ochre.training.train(ts)
 
-    for letter in letters:
-        c = ochre.get_letter(letter)
-        pred = ochre.training.predict(nn, c)
-        cor = "ok" if letter == pred else "fail"
-        print(f"{letter} == {pred}     {cor}")
+    prediction = [
+        ochre.training.predict(nn, sentence_img, box=box(idx))
+        for idx in range(len(sentence))
+    ]
+    print("".join(prediction))
+
+    for idx, c in enumerate(sentence):
+        if c == " ":
+            print(f"Skipping space at idx={idx}")
+            continue
+        letter = ochre.training.predict(nn, sentence_img, box=box(idx))
+        cor = "ok" if letter == c else "fail"
+        print(f"{letter} == {c}     {cor}")
 
 
-def _assert_letters(args):
-    for c in args:
-        assert len(c) == 1, f'"{c}" in args not a letter'
+def _assert_letters(sentence):
+    for c in sentence:
+        if c == " ":
+            continue
         assert ord("a") <= ord(c) <= ord("z"), f'"{c}" not in alphabet'
 
 
@@ -24,7 +38,7 @@ if __name__ == "__main__":
     from sys import argv
 
     if len(argv) < 2:
-        exit("Usage: train a b c ...")
-    args = argv[1:]
-    _assert_letters(args)
-    main(args)
+        exit("Usage: train hello world")
+    sentence = " ".join(argv[1:]).lower()
+    _assert_letters(sentence)
+    main(sentence)
