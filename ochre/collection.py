@@ -9,6 +9,12 @@ def _generate(img, op):
         yield op(img, i)
 
 
+def noise(img):
+    while True:
+        img = np.random.normal(2*img + 2, 20)
+        yield img
+
+
 def up(img):
     f = lambda img, i: ochre.generators.shift(img, i, 0)
     for e in _generate(img, f):
@@ -48,7 +54,7 @@ def backslash(img):
 def collection(img, num=2):
     yield img
 
-    for op in (up, down, left, right, slash, backslash):
+    for op in (up, down, left, right, slash, backslash, noise):
         img_gen = op(img)
         for idx, img_ in enumerate(img_gen):
             yield img_

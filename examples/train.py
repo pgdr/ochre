@@ -3,13 +3,18 @@ import ochre
 import ochre.training
 
 
-def main(sentence):
+def main(sentence, collection=True):
     print(sentence)
     box = lambda idx: (0, idx * 14, 14, (idx + 1) * 14)
     sentence_img = ochre.get_sentence(sentence)
 
     letters = sorted(set(sentence.replace(" ", "")))
-    ts = {c: [ochre.get_letter(c)] for c in letters}
+    if collection:
+        ts = {
+            c: list(ochre.collection.collection(ochre.get_letter(c))) for c in letters
+        }
+    else:
+        ts = {c: [ochre.get_letter(c)] for c in letters}
     nn = ochre.training.train(ts)
 
     prediction = [
@@ -39,6 +44,11 @@ if __name__ == "__main__":
 
     if len(argv) < 2:
         exit("Usage: train hello world")
+
+    collection = False  # noise, shear, up/down, etc
+    if "--collection" in argv:
+        collection = True
+        argv.remove("--collection")
     sentence = " ".join(argv[1:]).lower()
     _assert_letters(sentence)
-    main(sentence)
+    main(sentence, collection=collection)

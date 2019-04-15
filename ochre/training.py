@@ -1,5 +1,6 @@
 import numpy as np
 from sklearn.neural_network import MLPClassifier
+from sklearn.svm import SVC
 
 
 def _get_network(width: int, height: int):
@@ -29,22 +30,40 @@ def _letter_vector(c):
     return vec
 
 
+def _non_neural(c):
+    return ord(c) - ord("a")
+
+
 def train(training_set: dict, width: int = 14, height: int = 14):
     """The input dict must be a set mapping letters to a list of ndarrays"""
     _assert_training_set(training_set, width, height)
-    nn = _get_network(width, height)
+
+    _neural = False
+    if _neural:
+        classifier = _get_network(width, height)
+    else:
+        classifier = SVC(gamma=0.001)
     X = []
     for x in training_set:
         for img in training_set[x]:
             print(len(X))
             X.append(img.reshape(1, -1))
+
     X = np.array(X)
     X = X.reshape((len(X), (width * height)))
     print(X.shape)
-    y = np.array([_letter_vector(x) for _ in training_set[x] for x in training_set])
+
+    if _neural:
+        y = np.array([_letter_vector(x) for _ in training_set[x] for x in training_set])
+    else:
+        _y = []
+        for x, lst in training_set.items():
+            _y.extend([_non_neural(x) for _ in lst])
+        y = np.array(_y)
     print(y.shape)
-    nn.fit(X, np.array(y))
-    return nn
+    print(y)
+    classifier.fit(X, np.array(y))
+    return classifier
 
 
 def predict_vector(nn, img, box=None):
@@ -58,6 +77,10 @@ def predict_vector(nn, img, box=None):
 def predict(nn, img, box=None):
     vec = predict_vector(nn=nn, img=img, box=box)
     idx = vec.argmax()
-    if vec[idx] < 0.8 or len([e for e in vec if e > 0.5]) > 2:
-        return " "
-    return chr(idx + ord("a"))
+    _neural = False
+    if _neural:
+        if vec[idx] < 0.8 or len([e for e in vec if e > 0.5]) > 2:
+            return " "
+        return chr(idx + ord("a"))
+
+    return chr(ord("a") + int(vec))
