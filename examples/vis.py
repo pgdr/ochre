@@ -4,27 +4,28 @@ import matplotlib.pyplot as plt
 import ochre
 
 
-def vis_char(char):
-    img = ochre.get_letter(char)
-    return img
+def plot_figures(figures):
+    width = int((len(figures)) ** 0.5)
+    height = (len(figures) // width) + 1
 
-
-def vis_word(word):
-    img = ochre.get_word(word)
-    return img
+    f, axarr = plt.subplots(width, height)
+    for i, fig in enumerate(figures):
+        x = i % width
+        y = i // width
+        axarr[x, y].imshow(fig)
+    return f, axarr
 
 
 def vis_sentence(sent):
-    img = ochre.get_sentence(sent, serif=os.getenv("SERIF"))
-    return img
+    coll = list(
+        ochre.collection.collection(ochre.get_sentence(sent, serif=os.getenv("SERIF")))
+    )
+    return coll
 
 
 def main(args):
-    if len(args) == 1:
-        img = vis_char(arg) if len(arg) == 1 else vis_word(arg)
-    else:
-        img = vis_sentence(" ".join(args))
-    plt.imshow(img)
+    coll = vis_sentence(" ".join(args))
+    plot_figures(coll)
     plt.show()
 
 
