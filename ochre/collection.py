@@ -11,7 +11,7 @@ def _generate(img, op):
 
 def noise(img):
     while True:
-        img = np.random.normal(2*img + 2, 20)
+        img = np.random.normal(2 * img + 2, 20)
         yield img
 
 
